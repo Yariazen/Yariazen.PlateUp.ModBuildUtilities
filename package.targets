@@ -37,7 +37,7 @@
 		<EnableModDeployLocal Condition="'$(EnableModDeployLocal)' == ''">true</EnableModDeployLocal>
 		<EnableGameDebugging Condition="'$(EnableGameDebugging)' == ''">true</EnableGameDebugging>
 		<EnableCopyLocal Condition="'$(EnableCopyLocal)' == ''">false</EnableCopyLocal>
-		<EnableDocumentation Condition="'$(EnableDocumentation)' == ''">false</EnableDocumentation>
+		<EnableDocumentation Condition="'$(EnableDocumentation)' == ''">true</EnableDocumentation>
 	</PropertyGroup>
 
 	<Target Name="ValidateGamePath" AfterTargets="BeforeBuild">
