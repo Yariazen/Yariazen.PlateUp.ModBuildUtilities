@@ -1,9 +1,0 @@
-D:\Users\Aidan\source\repos\YariazenMods\PlateUpMods\ModBuildUtilities\bin\Debug\net472\ModBuildUtilities.dll
-D:\Users\Aidan\source\repos\YariazenMods\PlateUpMods\ModBuildUtilities\bin\Debug\net472\ModBuildUtilities.pdb
-D:\Users\Aidan\source\repos\YariazenMods\PlateUpMods\ModBuildUtilities\obj\Debug\net472\ModBuildUtilities.csproj.AssemblyReference.cache
-D:\Users\Aidan\source\repos\YariazenMods\PlateUpMods\ModBuildUtilities\obj\Debug\net472\ModBuildUtilities.GeneratedMSBuildEditorConfig.editorconfig
-D:\Users\Aidan\source\repos\YariazenMods\PlateUpMods\ModBuildUtilities\obj\Debug\net472\ModBuildUtilities.AssemblyInfoInputs.cache
-D:\Users\Aidan\source\repos\YariazenMods\PlateUpMods\ModBuildUtilities\obj\Debug\net472\ModBuildUtilities.AssemblyInfo.cs
-D:\Users\Aidan\source\repos\YariazenMods\PlateUpMods\ModBuildUtilities\obj\Debug\net472\ModBuildUtilities.csproj.CoreCompileInputs.cache
-D:\Users\Aidan\source\repos\YariazenMods\PlateUpMods\ModBuildUtilities\obj\Debug\net472\ModBuildUtilities.dll
-D:\Users\Aidan\source\repos\YariazenMods\PlateUpMods\ModBuildUtilities\obj\Debug\net472\ModBuildUtilities.pdb
