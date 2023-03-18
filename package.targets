@@ -1,9 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<!-- find game path -->
 	<Choose>
 		<When Condition="$(OS) == 'Unix'">
 			<PropertyGroup>
-				<!-- Linux -->
 				<GamePath Condition="!Exists('$(GamePath)')">$(HOME)/.steam/steam/steamapps/common/PlateUp/PlateUp</GamePath>
 				<GamePath Condition="!Exists('$(GamePath)')">$(HOME)/.local/share/Steam/steamapps/common/PlateUp/PlateUp</GamePath>
 				<GamePath Condition="!Exists('$(GamePath)')">$(HOME)/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/common/PlateUp/PlateUp</GamePath>
@@ -11,14 +9,11 @@
 		</When>
 		<When Condition="$(OS) == 'Windows_NT'">
 			<PropertyGroup>
-				<!-- registry paths -->
 				<GamePath Condition="!Exists('$(GamePath)')">$([System.IO.Path]::Combine($([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1599600', 'InstallLocation', null, RegistryView.Registry64, RegistryView.Registry32)), "PlateUp"))</GamePath>
 
-				<!-- derive from Steam library path -->
 				<_SteamLibraryPath>$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\SOFTWARE\Valve\Steam', 'SteamPath', null, RegistryView.Registry32))</_SteamLibraryPath>
 				<GamePath Condition="!Exists('$(GamePath)') AND '$(_SteamLibraryPath)' != ''">$(_SteamLibraryPath)/steamapps/common/PlateUp/PlateUp</GamePath>
 
-				<!-- Steam paths -->
 				<GamePath Condition="!Exists('$(GamePath)')">C:\Program Files\Steam\steamapps\common\PlateUp\PlateUp</GamePath>
 				<GamePath Condition="!Exists('$(GamePath)')">C:\Program Files (x86)\Steam\steamapps\common\PlateUp\PlateUp</GamePath>
 			</PropertyGroup>
@@ -33,11 +28,12 @@
 		<AssemblyReferencePath Condition="'$(AssemblyReferencePath)' == ''">$([System.IO.Path]::Combine($(GamePath), 'PlateUp_Data', 'Managed'))</AssemblyReferencePath>
 		<GameModsPath Condition="'$(GameModsPath)' == ''">$([System.IO.Path]::Combine($(GamePath), 'Mods'))</GameModsPath>
 		<AssetBundlePath Condition="'$(AssetBundlePath)' == ''">$([System.IO.Path]::Combine($(USERPROFILE), 'My Project', 'Assets', 'AssetBundles', $([System.String]::Copy('$(MSBuildProjectName)').ToLower())))</AssetBundlePath>
+		<OutputDirectory Condition="'$(OutputDirectory)' == ''">$([System.IO.Path]::Combine($(GamePath), 'PlateUp_Data', 'PublicizedAssemblies'))</OutputDirectory>
 		
 		<EnableModDeployLocal Condition="'$(EnableModDeployLocal)' == ''">true</EnableModDeployLocal>
 		<EnableGameDebugging Condition="'$(EnableGameDebugging)' == ''">true</EnableGameDebugging>
 		<EnableCopyLocal Condition="'$(EnableCopyLocal)' == ''">false</EnableCopyLocal>
-		<EnableDocumentation Condition="'$(EnableDocumentation)' == ''">true</EnableDocumentation>
+		<EnableDocumentation Condition="'$(EnableDocumentation)' == ''">false</EnableDocumentation>
 	</PropertyGroup>
 
 	<Target Name="ValidateGamePath" AfterTargets="BeforeBuild">
@@ -58,8 +54,14 @@
 		<Reference Include="$(AssemblyReferencePath)\Sirenix.Serialization.dll" Private="true" />
 		<Reference Include="$(AssemblyReferencePath)\XNode.dll" Private="true" />
 		<Reference Include="$(WorkshopPath)\**\*.dll" Private="true" />
+		<Reference Include="$(AssemblyReferencePath)\Facepunch.Steamworks.Win64.dll" Private="true"/>
+		<Reference Include="$(AssemblyReferencePath)\System.Memory.dll" Private="true"/>
+		<Reference Include="$(AssemblyReferencePath)\System.Net.Http.dll" Private="true" />
+		<Reference Include="$(AssemblyReferencePath)\System.Web.dll" Private="true" />
+		<Reference Include="$(AssemblyReferencePath)\MessagePack*.dll" Private="true" />
+		<Reference Include="$(GameModsPath)\**\content\*.dll" Exclude="$(GameModsPath)\$(MSBuildProjectName)\**\content\*.dll" Private="true"/>
 	</ItemGroup>
-	
+
 	<ItemGroup Condition="'$(GamePath)' != '' AND '!$(EnableCopyLocal)'">
 		<Reference Include="$(AssemblyReferencePath)\Kitchen*.dll" Private="false" />
 		<Reference Include="$(AssemblyReferencePath)\Unity*.dll" Private="false" />
@@ -68,20 +70,26 @@
 		<Reference Include="$(AssemblyReferencePath)\Sirenix.Serialization.dll" Private="false" />
 		<Reference Include="$(AssemblyReferencePath)\XNode.dll" Private="false" />
 		<Reference Include="$(WorkshopPath)\**\*.dll" Private="false" />
+		<Reference Include="$(AssemblyReferencePath)\Facepunch.Steamworks.Win64.dll" Private="false"/>
+		<Reference Include="$(AssemblyReferencePath)\System.Memory.dll" Private="false"/>
+		<Reference Include="$(AssemblyReferencePath)\System.Net.Http.dll" Private="false" />
+		<Reference Include="$(AssemblyReferencePath)\System.Web.dll" Private="false" />
+		<Reference Include="$(AssemblyReferencePath)\MessagePack*.dll" Private="false" />
+		<Reference Include="$(GameModsPath)\**\content\*.dll" Exclude="$(GameModsPath)\$(MSBuildProjectName)\**\content\*.dll" Private="false"/>
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(EnableDocumentation)'">
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<DocumentationFile>bin\$(Configuration)/$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
-		
+
 	<Target Name="Deploy" AfterTargets="Build" Condition="$(EnableModDeployLocal) == 'true'">
 		<Message Text="Running DeployPack target..." />
 		<ItemGroup>
 			<_DLLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).dll" />
 			<_XMLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml" />
 		</ItemGroup>
-		
+
 		<Copy SourceFiles="@(_DLLToCopy)" DestinationFiles="@(_DLLToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy Condition="Exists('$(AssetBundlePath)')" SourceFiles="$(AssetBundlePath)" DestinationFiles="$(GameModsPath)\$(MSBuildProjectName)\content\$([System.String]::Copy('$(MSBuildProjectName)').ToLower()).assets" />
 		<Copy Condition="'$(EnableDocumentation)'" SourceFiles="@(_XMLToCopy)" DestinationFiles="@(_XMLToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />

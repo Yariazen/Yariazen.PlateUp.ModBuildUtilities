@@ -7,17 +7,22 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		
 		<!--NuGet Package-->
 		<PackageId>Yariazen.PlateUp.ModBuildUtilities</PackageId>
 		<Title>Build package for PlateUp mods</Title>
-		<Version>1.6.17</Version>
+		<Version>1.7.26</Version>
 		<Authors>Yariazen</Authors>
 		<Description>Automates the build configuration for PlateUp mods as well as some utilities.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.4.0" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<None PackagePath="build\Yariazen.PlateUp.ModBuildUtilities.dll" Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" Visible="false" />
