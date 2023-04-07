@@ -47,34 +47,14 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(GamePath)' != '' AND '$(EnableCopyLocal)'">
-		<Reference Include="$(AssemblyReferencePath)\Kitchen*.dll" Private="true" />
-		<Reference Include="$(AssemblyReferencePath)\Unity*.dll" Private="true" />
-		<Reference Include="$(AssemblyReferencePath)\Newtonsoft.Json.dll" Private="true" />
-		<Reference Include="$(AssemblyReferencePath)\Controllers.dll" Private="true" />
-		<Reference Include="$(AssemblyReferencePath)\Sirenix.Serialization.dll" Private="true" />
-		<Reference Include="$(AssemblyReferencePath)\XNode.dll" Private="true" />
+		<Reference Include="$(AssemblyReferencePath)\*.dll" Private="true" />
 		<Reference Include="$(WorkshopPath)\**\*.dll" Private="true" />
-		<Reference Include="$(AssemblyReferencePath)\Facepunch.Steamworks.Win64.dll" Private="true"/>
-		<Reference Include="$(AssemblyReferencePath)\System.Memory.dll" Private="true"/>
-		<Reference Include="$(AssemblyReferencePath)\System.Net.Http.dll" Private="true" />
-		<Reference Include="$(AssemblyReferencePath)\System.Web.dll" Private="true" />
-		<Reference Include="$(AssemblyReferencePath)\MessagePack*.dll" Private="true" />
 		<Reference Include="$(GameModsPath)\**\content\*.dll" Exclude="$(GameModsPath)\$(MSBuildProjectName)\**\content\*.dll" Private="true"/>
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(GamePath)' != '' AND '!$(EnableCopyLocal)'">
-		<Reference Include="$(AssemblyReferencePath)\Kitchen*.dll" Private="false" />
-		<Reference Include="$(AssemblyReferencePath)\Unity*.dll" Private="false" />
-		<Reference Include="$(AssemblyReferencePath)\Newtonsoft.Json.dll" Private="false" />
-		<Reference Include="$(AssemblyReferencePath)\Controllers.dll" Private="false" />
-		<Reference Include="$(AssemblyReferencePath)\Sirenix.Serialization.dll" Private="false" />
-		<Reference Include="$(AssemblyReferencePath)\XNode.dll" Private="false" />
+		<Reference Include="$(AssemblyReferencePath)\*.dll" Exclude="$(AssemblyReferencePath)\System.Buffers.dll;$(AssemblyReferencePath)\Microsoft.Extensions.Logging.Abstractions.dll" Private="false" />
 		<Reference Include="$(WorkshopPath)\**\*.dll" Private="false" />
-		<Reference Include="$(AssemblyReferencePath)\Facepunch.Steamworks.Win64.dll" Private="false"/>
-		<Reference Include="$(AssemblyReferencePath)\System.Memory.dll" Private="false"/>
-		<Reference Include="$(AssemblyReferencePath)\System.Net.Http.dll" Private="false" />
-		<Reference Include="$(AssemblyReferencePath)\System.Web.dll" Private="false" />
-		<Reference Include="$(AssemblyReferencePath)\MessagePack*.dll" Private="false" />
 		<Reference Include="$(GameModsPath)\**\content\*.dll" Exclude="$(GameModsPath)\$(MSBuildProjectName)\**\content\*.dll" Private="false"/>
 	</ItemGroup>
 
