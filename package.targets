@@ -34,7 +34,15 @@
 		<EnableGameDebugging Condition="'$(EnableGameDebugging)' == ''">true</EnableGameDebugging>
 		<EnableCopyLocal Condition="'$(EnableCopyLocal)' == ''">false</EnableCopyLocal>
 		<EnableDocumentation Condition="'$(EnableDocumentation)' == ''">false</EnableDocumentation>
+		<EnableAutoReference Condition="'$(EnableAutoReference)' == ''">true</EnableAutoReference>
 	</PropertyGroup>
+	
+	<ItemGroup>
+		<Blacklist Include="$(AssemblyReferencePath)\System.Buffers.dll"/>
+		<Blacklist Include="$(AssemblyReferencePath)\Microsoft.Extensions.Logging.Abstractions.dll"/>
+		<Blacklist Include="$(AssemblyReferencePath)\Mono.Posix.dll" />
+		<Blacklist Include="$(AssemblyReferencePath)\Mono.Security.dll" />
+	</ItemGroup>
 
 	<Target Name="ValidateGamePath" AfterTargets="BeforeBuild">
 		<Error Condition="!Exists('$(GamePath)')" Text="The mod build package can't find your game folder. You can specify where to find it" ContinueOnError="false" />
@@ -46,14 +54,14 @@
 		<StartWorkingDirectory>$(GamePath)</StartWorkingDirectory>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(GamePath)' != '' AND '$(EnableCopyLocal)'">
+	<ItemGroup Condition="'$(GamePath)' != '' AND '$(EnableCopyLocal)' AND '$(EnableAutoReference)'">
 		<Reference Include="$(AssemblyReferencePath)\*.dll" Private="true" />
 		<Reference Include="$(WorkshopPath)\**\*.dll" Private="true" />
 		<Reference Include="$(GameModsPath)\**\content\*.dll" Exclude="$(GameModsPath)\$(MSBuildProjectName)\**\content\*.dll" Private="true"/>
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(GamePath)' != '' AND '!$(EnableCopyLocal)'">
-		<Reference Include="$(AssemblyReferencePath)\*.dll" Exclude="$(AssemblyReferencePath)\System.Buffers.dll;$(AssemblyReferencePath)\Microsoft.Extensions.Logging.Abstractions.dll" Private="false" />
+	<ItemGroup Condition="'$(GamePath)' != '' AND '!$(EnableCopyLocal)' AND '$(EnableAutoReference)'">
+		<Reference Include="$(AssemblyReferencePath)\*.dll" Exclude="@(Blacklist)" Private="false" />
 		<Reference Include="$(WorkshopPath)\**\*.dll" Private="false" />
 		<Reference Include="$(GameModsPath)\**\content\*.dll" Exclude="$(GameModsPath)\$(MSBuildProjectName)\**\content\*.dll" Private="false"/>
 	</ItemGroup>
@@ -62,9 +70,12 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<DocumentationFile>bin\$(Configuration)/$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
-
+		
 	<Target Name="Deploy" AfterTargets="Build" Condition="$(EnableModDeployLocal) == 'true'">
-		<Message Text="Running DeployPack target..." />
+		<Message Text="***********************************************************" Importance="high"/>
+		<Message Text="Running DeployPack target..." Importance="high" />
+		<Message Text="***********************************************************" Importance="high"/>
+		
 		<ItemGroup>
 			<_DLLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).dll" />
 			<_XMLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml" />
@@ -73,11 +84,5 @@
 		<Copy SourceFiles="@(_DLLToCopy)" DestinationFiles="@(_DLLToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy Condition="Exists('$(AssetBundlePath)')" SourceFiles="$(AssetBundlePath)" DestinationFiles="$(GameModsPath)\$(MSBuildProjectName)\content\$([System.String]::Copy('$(MSBuildProjectName)').ToLower()).assets" />
 		<Copy Condition="'$(EnableDocumentation)'" SourceFiles="@(_XMLToCopy)" DestinationFiles="@(_XMLToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
-	</Target>
-
-	<Target Name="TestMessage" AfterTargets="Build" >
-		<Message Text="***********************************************************" Importance="high"/>
-		<Message Text="$(MSBuildThisFileDirectory)" Importance="high"/>
-		<Message Text="***********************************************************" Importance="high"/>
 	</Target>
 </Project>

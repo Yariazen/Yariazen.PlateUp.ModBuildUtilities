@@ -13,4 +13,50 @@
 | EnableModDeployLocal	| Bool		| True		| Automatically deploy to your Mods directory |
 | EnableGameDebugging	| Bool		| True		| Automatically attach Roslyn debugger for the Visual Studio IDE |
 | EnableCopyLocal		| Bool		| False		| Copy dependencies to your build directory |
-| EnableDocumentation	| Bool		| True		| Generate XML documentation |
+| EnableDocumentation	| Bool		| False		| Generate XML documentation |
+| EnableAutoReference   | Bool		| True		| Automatically references PlateUp! dlls, workshop mods, and local mods |
+
+# Blacklist
+Specific DLLs can be blacklisted from the auto reference. Make a new ItemGroup and include a Blacklist item with the DLL you wish to exclude. By default the following are excluded.
+
+```xml
+<ItemGroup>
+	<Blacklist Include="$(AssemblyReferencePath)\System.Buffers.dll" />
+	<Blacklist Include="$(AssemblyReferencePath)\Microsoft.Extensions.Logging.Abstractions.dll" />
+	<Blacklist Include="$(AssemblyReferencePath)\Mono.Posix.dll" />
+	<Blacklist Include="$(AssemblyReferencePath)\Mono.Security.dll" />
+</ItemGroup>
+```
+
+### Examples
+Blacklist a single DLL
+```xml
+<ItemGroup>
+	<Blacklist Include="$(AssemblyReferencePath)\System.Buffers.dll" />
+<\ItemGroup>
+```
+
+Blacklist multiple specific DLL
+```xml
+<ItemGroup>
+	<Blacklist Include="$(AssemblyReferencePath)\System.Buffers.dll" />
+	<Blacklist Include="$(AssemblyReferencePath)\Microsoft.Extensions.Logging.Abstractions.dll" />
+	<Blacklist Include="$(AssemblyReferencePath)\Mono.Posix.dll" />
+	<Blacklist Include="$(AssemblyReferencePath)\Mono.Security.dll" />
+</ItemGroup>
+```
+
+Blacklist with wild card
+```xml
+<ItemGroup>
+	<Blacklist Include="$(AssemblyReferencePath)\Unity*.dll" />
+<\ItemGroup>
+```
+
+Blacklist with wild card and exclude
+Blacklist with wild card
+```xml
+<ItemGroup>
+	<Blacklist Include="$(AssemblyReferencePath)\Unity*.dll" Exclude="$(AssemblyReferencePath)\Unity.Entities.dll" />
+<\ItemGroup>
+```
