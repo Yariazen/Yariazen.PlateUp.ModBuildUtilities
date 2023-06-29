@@ -55,7 +55,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(GamePath)' != '' AND '$(EnableCopyLocal)' AND '$(EnableAutoReference)'">
-		<Reference Include="$(AssemblyReferencePath)\*.dll" Private="true" />
+		<Reference Include="$(AssemblyReferencePath)\*.dll" Exclude="@(Blacklist)" Private="true" />
 		<Reference Include="$(WorkshopPath)\**\*.dll" Private="true" />
 		<Reference Include="$(GameModsPath)\**\content\*.dll" Exclude="$(GameModsPath)\$(MSBuildProjectName)\**\content\*.dll" Private="true"/>
 	</ItemGroup>
