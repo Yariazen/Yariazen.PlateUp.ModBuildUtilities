@@ -54,7 +54,6 @@ Blacklist with wild card
 ```
 
 Blacklist with wild card and exclude
-Blacklist with wild card
 ```xml
 <ItemGroup>
 	<Blacklist Include="$(AssemblyReferencePath)\Unity*.dll" Exclude="$(AssemblyReferencePath)\Unity.Entities.dll" />
