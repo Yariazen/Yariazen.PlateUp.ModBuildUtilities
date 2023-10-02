@@ -35,6 +35,7 @@
 		<EnableCopyLocal Condition="'$(EnableCopyLocal)' == ''">false</EnableCopyLocal>
 		<EnableDocumentation Condition="'$(EnableDocumentation)' == ''">false</EnableDocumentation>
 		<EnableAutoReference Condition="'$(EnableAutoReference)' == ''">true</EnableAutoReference>
+		<EnableAutoPDB Condition="'$(EnableAutoPDB)' == ''">false</EnableAutoPDB>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -79,10 +80,13 @@
 		<ItemGroup>
 			<_DLLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).dll" />
 			<_XMLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml" />
+			<_PDBToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pdb" />
 		</ItemGroup>
 
 		<Copy SourceFiles="@(_DLLToCopy)" DestinationFiles="@(_DLLToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(IncludeDLL)" DestinationFolder="$(GameModsPath)\$(MSBuildProjectName)\content\" />
 		<Copy Condition="Exists('$(AssetBundlePath)')" SourceFiles="$(AssetBundlePath)" DestinationFiles="$(GameModsPath)\$(MSBuildProjectName)\content\$([System.String]::Copy('$(MSBuildProjectName)').ToLower()).assets" />
 		<Copy Condition="'$(EnableDocumentation)'" SourceFiles="@(_XMLToCopy)" DestinationFiles="@(_XMLToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy Condition="'$(EnableAutoPDB)'" SourceFiles="@(_PDBToCopy)" DestinationFiles="@(_PDBToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
 	</Target>
 </Project>
