@@ -29,13 +29,14 @@
 		<GameModsPath Condition="'$(GameModsPath)' == ''">$([System.IO.Path]::Combine($(GamePath), 'Mods'))</GameModsPath>
 		<AssetBundlePath Condition="'$(AssetBundlePath)' == ''">$([System.IO.Path]::Combine($(USERPROFILE), 'My Project', 'Assets', 'AssetBundles', $([System.String]::Copy('$(MSBuildProjectName)').ToLower())))</AssetBundlePath>
 		<OutputDirectory Condition="'$(OutputDirectory)' == ''">$([System.IO.Path]::Combine($(GamePath), 'PlateUp_Data', 'PublicizedAssemblies'))</OutputDirectory>
+		<ThirdPartyPath Condition="'$(ThirdPartyPath)' == ''">$([System.IO.Path]::Combine($(ProjectDir), 'ThirdParty'))</ThirdPartyPath>
 		
 		<EnableModDeployLocal Condition="'$(EnableModDeployLocal)' == ''">true</EnableModDeployLocal>
-		<EnableGameDebugging Condition="'$(EnableGameDebugging)' == ''">true</EnableGameDebugging>
+		<EnableGameDebugging Condition="'$(EnableGameDebugging)' == ''">false</EnableGameDebugging>
 		<EnableCopyLocal Condition="'$(EnableCopyLocal)' == ''">false</EnableCopyLocal>
 		<EnableDocumentation Condition="'$(EnableDocumentation)' == ''">false</EnableDocumentation>
 		<EnableAutoReference Condition="'$(EnableAutoReference)' == ''">true</EnableAutoReference>
-		<EnableAutoPDB Condition="'$(EnableAutoPDB)' == ''">false</EnableAutoPDB>
+		<EnableAutoPDB Condition="'$(EnableAutoPDB)' == ''">true</EnableAutoPDB>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -56,7 +57,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(GamePath)' != '' AND '$(EnableCopyLocal)' AND '$(EnableAutoReference)'">
-		<Reference Include="$(AssemblyReferencePath)\*.dll" Exclude="@(Blacklist)" Private="true" />
+		<Reference Include="$(AssemblyReferencePath)\*.dll" Private="true" />
 		<Reference Include="$(WorkshopPath)\**\*.dll" Private="true" />
 		<Reference Include="$(GameModsPath)\**\content\*.dll" Exclude="$(GameModsPath)\$(MSBuildProjectName)\**\content\*.dll" Private="true"/>
 	</ItemGroup>
@@ -76,15 +77,17 @@
 		<Message Text="***********************************************************" Importance="high"/>
 		<Message Text="Running DeployPack target..." Importance="high" />
 		<Message Text="***********************************************************" Importance="high"/>
-		
+
+
 		<ItemGroup>
-			<_DLLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).dll" />
+			<_IncludeDLL Include="$(ThirdPartyPath)/*.dll" />
+			<_DLLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/*.dll" />
 			<_XMLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml" />
 			<_PDBToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pdb" />
 		</ItemGroup>
 
+		<Copy SourceFiles="@(_IncludeDLL)" DestinationFolder="@(_IncludeDLL->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy SourceFiles="@(_DLLToCopy)" DestinationFiles="@(_DLLToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
-		<Copy SourceFiles="@(IncludeDLL)" DestinationFolder="$(GameModsPath)\$(MSBuildProjectName)\content\" />
 		<Copy Condition="Exists('$(AssetBundlePath)')" SourceFiles="$(AssetBundlePath)" DestinationFiles="$(GameModsPath)\$(MSBuildProjectName)\content\$([System.String]::Copy('$(MSBuildProjectName)').ToLower()).assets" />
 		<Copy Condition="'$(EnableDocumentation)'" SourceFiles="@(_XMLToCopy)" DestinationFiles="@(_XMLToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy Condition="'$(EnableAutoPDB)'" SourceFiles="@(_PDBToCopy)" DestinationFiles="@(_PDBToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
