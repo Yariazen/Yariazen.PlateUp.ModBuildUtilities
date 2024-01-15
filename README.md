@@ -7,11 +7,13 @@
 | AssemblyReferencePath | String	| Your PlateUp_Data/Managed directory |
 | GameModsPath			| String	| The Mods folder located in the same directory as your PlateUp executable |
 | AssetBundlePath		| String	| The path to the AssetBundle for your mod |
+| ThirdPartyPath		| String	| The path to third party dlls for your mod |
 
 | Utility				| Type		| Default	| Description |
 | ---					| ---		| ---		| --- |
 | EnableModDeployLocal	| Bool		| True		| Automatically deploy to your Mods directory |
-| EnableGameDebugging	| Bool		| True		| Automatically attach Roslyn debugger for the Visual Studio IDE |
+| EnableAutoPDB			| Bool		| True		| Automatically deploys your PDB to your Mods directory |
+| EnableGameDebugging	| Bool		| False		| Automatically attach Roslyn debugger for the Visual Studio IDE |
 | EnableCopyLocal		| Bool		| False		| Copy dependencies to your build directory |
 | EnableDocumentation	| Bool		| False		| Generate XML documentation |
 | EnableAutoReference   | Bool		| True		| Automatically references PlateUp! dlls, workshop mods, and local mods |
