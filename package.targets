@@ -71,6 +71,7 @@
 	<PropertyGroup Condition="'$(EnableDocumentation)'">
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<DocumentationFile>bin\$(Configuration)/$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		<BuildDir>$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/</BuildDir>
 	</PropertyGroup>
 		
 	<Target Name="Deploy" AfterTargets="Build" Condition="$(EnableModDeployLocal) == 'true'">
@@ -81,13 +82,14 @@
 
 		<ItemGroup>
 			<_IncludeDLL Include="$(ThirdPartyPath)/*.dll" />
-			<_DLLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/*.dll" />
-			<_XMLToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml" />
-			<_PDBToCopy Include="$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).pdb" />
+			<_DLLToCopy Include="$(BuildDir)/$(AssemblyName).dll" />
+			<_XMLToCopy Include="$(BuildDir)/$(AssemblyName).xml" />
+			<_PDBToCopy Include="$(BuildDir)/$(AssemblyName).pdb" />
 		</ItemGroup>
 
 		<Copy SourceFiles="@(_IncludeDLL)" DestinationFolder="@(_IncludeDLL->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy SourceFiles="@(_DLLToCopy)" DestinationFiles="@(_DLLToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(AdditionalDLLs)" DestinationFiles="@(AdditionalDLLs->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy Condition="Exists('$(AssetBundlePath)')" SourceFiles="$(AssetBundlePath)" DestinationFiles="$(GameModsPath)\$(MSBuildProjectName)\content\$([System.String]::Copy('$(MSBuildProjectName)').ToLower()).assets" />
 		<Copy Condition="'$(EnableDocumentation)'" SourceFiles="@(_XMLToCopy)" DestinationFiles="@(_XMLToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy Condition="'$(EnableAutoPDB)'" SourceFiles="@(_PDBToCopy)" DestinationFiles="@(_PDBToCopy->'$(GameModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />

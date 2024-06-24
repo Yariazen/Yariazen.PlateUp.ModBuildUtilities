@@ -1,13 +1,14 @@
 # Yaraizen.PlateUp.ModBuildUtilities
 
-| Property				| Type		| Description |
-| ---					| ---		| --- |
-| GamePath				| String	| The directory where the PlateUp executable is located |
-| WorkshopPath			| String	| Your PlateUp workshop directory |
-| AssemblyReferencePath | String	| Your PlateUp_Data/Managed directory |
+| Property				| Type		| Description                                                              |
+| ---					| ---		|--------------------------------------------------------------------------|
+| GamePath				| String	| The directory where the PlateUp executable is located                    |
+| WorkshopPath			| String	| Your PlateUp workshop directory                                          |
+| AssemblyReferencePath | String	| Your PlateUp_Data/Managed directory                                      |
 | GameModsPath			| String	| The Mods folder located in the same directory as your PlateUp executable |
-| AssetBundlePath		| String	| The path to the AssetBundle for your mod |
-| ThirdPartyPath		| String	| The path to third party dlls for your mod |
+| AssetBundlePath		| String	| The path to the AssetBundle for your mod                                 |
+| ThirdPartyPath		| String	| The path to third party dlls for your mod                                |
+| BuildDir		| String	| The path that your IDE exports dlls to                                   |
 
 | Utility				| Type		| Default	| Description |
 | ---					| ---		| ---		| --- |
@@ -60,4 +61,18 @@ Blacklist with wild card and exclude
 <ItemGroup>
 	<Blacklist Include="$(AssemblyReferencePath)\Unity*.dll" Exclude="$(AssemblyReferencePath)\Unity.Entities.dll" />
 <\ItemGroup>
+```
+
+# Additional DLLs
+
+You can include additional DLLs to be copied to your build directory. Make a new ItemGroup and include a Additional item with the DLL you wish to include.
+
+### Example
+
+```xml
+<ItemGroup>
+    <Additional Include="$(BuildDir)\0Harmony.dll" />
+    <Additional Include="$(BuildDir)\KitchenLib-Workshop.dll" />
+    <Additional Include="$D:\Foo\Bar\Foobar.dll" />
+</ItemGroup>
 ```
