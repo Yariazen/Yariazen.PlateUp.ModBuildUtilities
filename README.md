@@ -1,4 +1,4 @@
-# Yaraizen.PlateUp.ModBuildUtilities
+# Yariazen.PlateUp.ModBuildUtilities
 
 | Property				| Type		| Description                                                              |
 | ---					| ---		|--------------------------------------------------------------------------|
