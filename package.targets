@@ -37,6 +37,7 @@
 		<EnableDocumentation Condition="'$(EnableDocumentation)' == ''">false</EnableDocumentation>
 		<EnableAutoReference Condition="'$(EnableAutoReference)' == ''">true</EnableAutoReference>
 		<EnableAutoPDB Condition="'$(EnableAutoPDB)' == ''">true</EnableAutoPDB>
+		<BuildDir>$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/</BuildDir>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -71,7 +72,6 @@
 	<PropertyGroup Condition="'$(EnableDocumentation)'">
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<DocumentationFile>bin\$(Configuration)/$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-		<BuildDir>$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/</BuildDir>
 	</PropertyGroup>
 		
 	<Target Name="Deploy" AfterTargets="Build" Condition="$(EnableModDeployLocal) == 'true'">
