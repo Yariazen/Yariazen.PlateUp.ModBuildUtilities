@@ -1,78 +1,70 @@
-# Yariazen.PlateUp.ModBuildUtilities
+# PlateUp! Mod Build Utilities
 
-| Property				| Type		| Description                                                              |
-| ---					| ---		|--------------------------------------------------------------------------|
-| GamePath				| String	| The directory where the PlateUp executable is located                    |
-| WorkshopPath			| String	| Your PlateUp workshop directory                                          |
-| AssemblyReferencePath | String	| Your PlateUp_Data/Managed directory                                      |
-| GameModsPath			| String	| The Mods folder located in the same directory as your PlateUp executable |
-| AssetBundlePath		| String	| The path to the AssetBundle for your mod                                 |
-| ThirdPartyPath		| String	| The path to third party dlls for your mod                                |
-| BuildDir		| String	| The path that your IDE exports dlls to                                   |
+## Installation
 
-| Utility				| Type		| Default	| Description |
-| ---					| ---		| ---		| --- |
-| EnableModDeployLocal	| Bool		| True		| Automatically deploy to your Mods directory |
-| EnableAutoPDB			| Bool		| True		| Automatically deploys your PDB to your Mods directory |
-| EnableGameDebugging	| Bool		| False		| Automatically attach Roslyn debugger for the Visual Studio IDE |
-| EnableCopyLocal		| Bool		| False		| Copy dependencies to your build directory |
-| EnableDocumentation	| Bool		| False		| Generate XML documentation |
-| EnableAutoReference   | Bool		| True		| Automatically references PlateUp! dlls, workshop mods, and local mods |
-
-# Blacklist
-Specific DLLs can be blacklisted from the auto reference. Make a new ItemGroup and include a Blacklist item with the DLL you wish to exclude. By default the following are excluded.
-
+PlateUp! Mod Build Utilities are available as a NuGet package. You can install it by adding the following line to your project file.
+Ensure to replace `Version="0.0.0"` with the version you intend to use.
 ```xml
 <ItemGroup>
-	<Blacklist Include="$(AssemblyReferencePath)\System.Buffers.dll" />
-	<Blacklist Include="$(AssemblyReferencePath)\Microsoft.Extensions.Logging.Abstractions.dll" />
-	<Blacklist Include="$(AssemblyReferencePath)\Mono.Posix.dll" />
-	<Blacklist Include="$(AssemblyReferencePath)\Mono.Security.dll" />
+    <PackageReference Include="Yariazen.PlateUp.ModBuildUtilities" Version="0.0.0" />
 </ItemGroup>
 ```
 
-### Examples
-Blacklist a single DLL
-```xml
-<ItemGroup>
-	<Blacklist Include="$(AssemblyReferencePath)\System.Buffers.dll" />
-<\ItemGroup>
-```
+Or it can be found directly on NuGet at [Yariazen.PlateUp.ModBuildUtilities](https://www.nuget.org/packages/Yariazen.PlateUp.ModBuildUtilities/)
 
-Blacklist multiple specific DLL
+## Settings
+These settings are intended to be adjusted to your specific setup. The defaults are set to work with the default PlateUp! installation.
+
+| Settings                      | Type      | Default | Description                                 |
+|-------------------------------|-----------|---------|---------------------------------------------|
+| EnableModDeployLocal          | Bool      | true    | Automatically deploy to your Mods directory |
+| EnableGameDebugging           | Bool      | true    | Automatically attach your IDE debugger      |
+| EnableAutoGameReferences      | Bool      | true    | Automatically references PlateUp! DLLs      |
+| EnableAutoWorkshopReferences  | Bool      | true    | Automatically references Workshop DLLs      |
+| EnableAutoLocalModsReferences | Bool      | true    | Automatically references Local DLLs         |
+| EnableDocumentation           | Bool      | false   | Generate XML documentation                  |
+| EnableAutoPDB                 | Bool      | false   | Generate PDB files                          |
+| Blacklist                     | ItemGroup |         | List of DLLs to exclude from auto reference |
+| AdditionalDLLs                | ItemGroup |         | List of DLLs to include for deployment      |
+
+## Properties
+These properties are used internally by the build utilities. They should not be adjusted unless you have a specific reason to do so.
+
+| Properties            | Type   | Description                              |
+|-----------------------|--------|------------------------------------------|
+| SteamInstallDirectory | String | Location your Steam Client is installed  |
+| GamePath              | String | Location PlateUp! is installed           |
+| AssemblyReferencePath | String | Location PlateUp! DLLs are located       |
+| WorkshopPath          | String | Location Steam Workshop mods are located |
+| ModsPath              | String | Location local mods are installed        |
+| BuildDir              | String | Location the IDE exports DLLs            |
+
+## Examples
+
+### Reference Blacklist
+
+By default most of PlateUp! DLLs are automatically references in your project. You can blacklist specific DLLs by adding them to the Blacklist ItemGroup.
+The following example also shows the current defaults for the Blacklist ItemGroup.
+
 ```xml
 <ItemGroup>
-	<Blacklist Include="$(AssemblyReferencePath)\System.Buffers.dll" />
-	<Blacklist Include="$(AssemblyReferencePath)\Microsoft.Extensions.Logging.Abstractions.dll" />
-	<Blacklist Include="$(AssemblyReferencePath)\Mono.Posix.dll" />
-	<Blacklist Include="$(AssemblyReferencePath)\Mono.Security.dll" />
+    <Blacklist Include="$(AssemblyReferencePath)\System.Buffers.dll"/>
+    <Blacklist Include="$(AssemblyReferencePath)\Microsoft.Extensions.Logging.Abstractions.dll"/>
+    <Blacklist Include="$(AssemblyReferencePath)\Mono.Posix.dll" />
+    <Blacklist Include="$(AssemblyReferencePath)\Mono.Security.dll" />
+    <Blacklist Include="$(AssemblyReferencePath)\System.Memory.dll" />
+    <Blacklist Include="$(AssemblyReferencePath)\System.Runtime.CompilerServices.Unsafe.dll" />
 </ItemGroup>
 ```
 
-Blacklist with wild card
-```xml
-<ItemGroup>
-	<Blacklist Include="$(AssemblyReferencePath)\Unity*.dll" />
-<\ItemGroup>
-```
+### Additional DLLs
 
-Blacklist with wild card and exclude
-```xml
-<ItemGroup>
-	<Blacklist Include="$(AssemblyReferencePath)\Unity*.dll" Exclude="$(AssemblyReferencePath)\Unity.Entities.dll" />
-<\ItemGroup>
-```
-
-# Additional DLLs
-
-You can include additional DLLs to be copied to your build directory. Make a new ItemGroup and include a Additional item with the DLL you wish to include.
-
-### Example
+By default the only DLL that is deployed to your Mods directory is the one generated by your project. You can add additional DLLs to the deployment by adding them to the AdditionalDLLs ItemGroup.
 
 ```xml
 <ItemGroup>
-    <Additional Include="$(BuildDir)\0Harmony.dll" />
-    <Additional Include="$(BuildDir)\KitchenLib-Workshop.dll" />
-    <Additional Include="$D:\Foo\Bar\Foobar.dll" />
+    <AdditionalDLLs Include="$(BuildDir)\0Harmony.dll"/>
+    <AdditionalDLLs Include="$(BuildDir)\Semver.dll"/>
+    <AdditionalDLLs Include="$(BuildDir)\UniverseLib.dll"/>
 </ItemGroup>
 ```
