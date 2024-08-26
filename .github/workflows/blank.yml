@@ -24,7 +24,14 @@ jobs:
       - name: Build
         run: dotnet build
 
-      - name: Test
-        run: |
-          sudo apt install -y tree
-          tree .
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Yariazen.Plateup.ModBuildUtilities
+          path: ./bin/Debug/Yariazen.PlateUp.ModBuildUtilities.*.nupkg
+          if-no-files-found: error
+
+      - name: Upload Release
+        with: 
+          API_KEY: ${{ secrets.PLATEUP_MODBUILDUTILITIES}}
+        run: dotnet nuget push ./bin/Debug/Yariazen.PlateUp.ModBuildUtilities.1.13.0.nupkg --api-key "$API_KEY" --source https://api.nuget.org/v3/index.json
