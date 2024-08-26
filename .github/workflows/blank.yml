@@ -21,5 +21,10 @@ jobs:
           dotnet-version: |
             6.x
             
-      - name: Run a one-line script
+      - name: Build
         run: dotnet build
+
+      - name: Test
+        run: |
+          sudo apt install -y tree
+          tree .

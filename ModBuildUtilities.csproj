@@ -18,6 +18,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -27,5 +28,6 @@
 	<ItemGroup>
 		<None PackagePath="build\Yariazen.PlateUp.ModBuildUtilities.dll" Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" Visible="false" />
 		<None PackagePath="build\Yariazen.PlateUp.ModBuildUtilities.targets" Include="package.targets" Pack="true" Visible="true" />
+		<None Include="README.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 </Project>
