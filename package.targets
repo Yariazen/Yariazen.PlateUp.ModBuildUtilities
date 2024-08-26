@@ -67,6 +67,14 @@ string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
 		</PropertyGroup>
 	</Target>
 
+	<!-- Verify path -->
+
+	<Target Name="T_VerifyPath" AfterTargets="T_FindPlateUp" Condition="$(GamePath) == ''">
+		<Message Text="**********************************************************" Importance="high"/>
+		<Message Text="* Failed to find PlateUp Path. Please specifiy GamePath. *" Importance="high"/>
+		<Message Text="**********************************************************" Importance="high"/>
+	</Target>
+
 	<!-- Defining preferences -->
 
 	<Target Name="T_DefinePreferences" AfterTargets="T_FindPlateUp">
