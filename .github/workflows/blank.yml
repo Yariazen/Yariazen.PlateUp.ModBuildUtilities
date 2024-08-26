@@ -32,6 +32,5 @@ jobs:
           if-no-files-found: error
 
       - name: Upload Release
-        with: 
-          API_KEY: ${{ secrets.PLATEUP_MODBUILDUTILITIES}}
-        run: dotnet nuget push ./bin/Debug/Yariazen.PlateUp.ModBuildUtilities.1.13.0.nupkg --api-key "$API_KEY" --source https://api.nuget.org/v3/index.json
+        run: |
+          dotnet nuget push ./bin/Debug/Yariazen.PlateUp.ModBuildUtilities.1.13.0.nupkg --api-key "$API_KEY" --source https://api.nuget.org/v3/index.json
