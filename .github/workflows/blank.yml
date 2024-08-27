@@ -40,6 +40,7 @@ jobs:
                 cd GenerateReferences
                 dotnet nuget add source /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/bin/Release
                 echo "Added source"
+                [ -d "/home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/bin/Release" ] && echo "Dir exists." || echo "Dir does not exist."
                 dotnet add package Yariazen.PlateUp.ModBuildUtilities
                 echo "Added package"
                 cd ..
