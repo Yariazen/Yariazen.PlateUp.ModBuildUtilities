@@ -1,30 +1,47 @@
 name: CI
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    push:
+        branches: [ "master" ]
+    pull_request:
+        branches: [ "master" ]
 
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+        steps:
+        -   uses: actions/checkout@v4
         
-      - name: Install Debug Tools
-        run: |
-           sudo apt install -y tree
-           tree .
-      
-      - name: Install .NET Core
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: |
-            6.x
+        -   name: Install Debug Tools
+            run: |
+                sudo apt install -y tree
+                tree .
+
+        -   name: Install X
+            run: sudo apt install -y xvfb xdotool
+    
+        -   name: Install .NET Core
+            uses: actions/setup-dotnet@v3
+            with:
+                dotnet-version: 6.x
+
+        -   name: Build ModBuildUtilities
+            run: |
+                cd Yariazen.PlateUp.ModBuildUtilities
+                dotnet build -c Release
+                cd ..
+        
+        -   name: Build GenerateReferences
+            run: |
+                cd Yariazen.PlateUp.GenerateReferences
+                dotnet nuget add source ../Yariazen.PlateUp.ModBuildUtilities/bin/Release
+                dotnet add package Yariazen.PlateUp.ModBuildUtilities
+                dotnet build -c Release
+                cd ..
+  
             
     #  - name: Install Refasmer
     #    run: dotnet tool install -g JetBrains.Refasmer.CliTool
