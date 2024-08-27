@@ -31,8 +31,4 @@
 		<ErrorReport>prompt</ErrorReport>
 		<WarningLevel>4</WarningLevel>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="Yariazen.PlateUp.ModBuildUtilities" Version="1.14.1" />
-	</ItemGroup>
 </Project>
