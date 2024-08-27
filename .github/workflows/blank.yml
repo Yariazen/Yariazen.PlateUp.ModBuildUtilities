@@ -2,9 +2,9 @@ name: CI
 
 on:
     push:
-        branches: [ "master" ]
+        branches: [ "master", "Action-Testing" ]
     pull_request:
-        branches: [ "master" ]
+        branches: [ "master", "Action-Testing" ]
 
     workflow_dispatch:
 
