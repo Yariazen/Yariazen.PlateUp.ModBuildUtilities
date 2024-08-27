@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModBuildUtilities", "ModBuildUtilities.csproj", "{B2F70A74-F3F1-4A89-A32D-3977734FF593}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModBuildUtilities", "Yariazen.PlateUp.ModBuildUtilities\ModBuildUtilities.csproj", "{927765CC-6ED4-437F-BE0F-4B5A3A5F1AC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateReferences", "GenerateReferences\GenerateReferences.csproj", "{B9A71335-79D3-4FC7-AA77-CD494D3A17BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B2F70A74-F3F1-4A89-A32D-3977734FF593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2F70A74-F3F1-4A89-A32D-3977734FF593}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2F70A74-F3F1-4A89-A32D-3977734FF593}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2F70A74-F3F1-4A89-A32D-3977734FF593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{927765CC-6ED4-437F-BE0F-4B5A3A5F1AC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{927765CC-6ED4-437F-BE0F-4B5A3A5F1AC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{927765CC-6ED4-437F-BE0F-4B5A3A5F1AC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{927765CC-6ED4-437F-BE0F-4B5A3A5F1AC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9A71335-79D3-4FC7-AA77-CD494D3A17BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9A71335-79D3-4FC7-AA77-CD494D3A17BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9A71335-79D3-4FC7-AA77-CD494D3A17BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9A71335-79D3-4FC7-AA77-CD494D3A17BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

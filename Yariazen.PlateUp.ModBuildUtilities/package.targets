@@ -1,0 +1,178 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="T_FindSteamOnWindows;T_FindSteamOnUnix">
+
+	<!-- Defining a task for reading libraryfolders.vdf -->
+
+	<UsingTask
+			TaskName="FindPlateUpTask"
+			TaskFactory="RoslynCodeTaskFactory"
+			AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+		<ParameterGroup>
+			<SteamPath ParameterType="System.String" Required="true" />
+			<PlateUpPath ParameterType="System.String"  Output="true" />
+		</ParameterGroup>
+		<Task>
+			<Using Namespace="System"/>
+			<Using Namespace="System.IO"/>
+			<Code Type="Fragment" Language="cs">
+				<![CDATA[
+string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
+            string[] lines = File.ReadAllLines(libraryfolders);
+            foreach (string line in lines)
+            {
+                if (line.Contains("path"))
+                {
+                    string[] split = line.Split('"');
+                    string newPath = Path.Combine(split[3], "steamapps", "common", "PlateUp", "PlateUp");
+                    if (Directory.Exists(newPath))
+                    {
+                        PlateUpPath = newPath;
+                    }
+                }
+            }
+]]>
+			</Code>
+		</Task>
+	</UsingTask>
+
+	<PropertyGroup>
+		<BuildDir>$(ProjectDir)/bin/$(Configuration)/$(TargetFramework)/</BuildDir>
+	</PropertyGroup>
+	
+	<!-- Checking where Steam is installed -->
+
+	<Target Name="T_FindSteamOnWindows" Condition="$(OS) == 'Windows_NT'">
+		<PropertyGroup>
+			<SteamInstallDirectory Condition="$(SteamInstallDirectory) == ''">$([MSBuild]::GetRegistryValueFromView('HKEY_CURRENT_USER\SOFTWARE\Valve\Steam', 'SteamPath', null, RegistryView.Registry32))</SteamInstallDirectory>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="T_FindSteamOnUnix" Condition="$(OS) == 'Unix'">
+		<PropertyGroup>
+			<SteamInstallDirectory Condition="!Exists('$(SteamInstallDirectory)')">$(HOME)/.steam/steam</SteamInstallDirectory>
+			<SteamInstallDirectory Condition="!Exists('$(SteamInstallDirectory)')">$(HOME)/.local/share/Steam</SteamInstallDirectory>
+		</PropertyGroup>
+	</Target>
+
+	<!-- Checking where PlateUp is installed along with related paths -->
+
+	<Target Name="T_FindPlateUp" AfterTargets="T_FindSteamOnWindows;T_FindSteamOnUnix">
+		<FindPlateUpTask SteamPath="$(SteamInstallDirectory)">
+			<Output PropertyName="_GamePath" TaskParameter="PlateUpPath" />
+		</FindPlateUpTask>
+
+		<PropertyGroup>
+			<GamePath Condition="$(GamePath) == ''">$(_GamePath)</GamePath>
+			<AssemblyReferencePath Condition="$(AssemblyReferencePath) == ''">$(GamePath)\PlateUp_Data\Managed</AssemblyReferencePath>
+			<WorkshopPath Condition="$(WorkshopPath) == ''">$(GamePath)\..\..\..\workshop\content\1599600</WorkshopPath>
+			<ModsPath Condition="$(ModsPath) == ''">$(GamePath)\Mods</ModsPath>
+		</PropertyGroup>
+	</Target>
+
+	<!-- Verify path -->
+
+	<Target Name="T_VerifyPath" AfterTargets="T_FindPlateUp" Condition="$(GamePath) == ''">
+		<Message Text="**********************************************************" Importance="high"/>
+		<Message Text="* Failed to find PlateUp Path. Please specifiy GamePath. *" Importance="high"/>
+		<Message Text="**********************************************************" Importance="high"/>
+	</Target>
+
+	<!-- Defining preferences -->
+
+	<Target Name="T_DefinePreferences" AfterTargets="T_FindPlateUp" Condition="$(GamePath) != ''">
+		<Message Text="Found PlateUp Path at $(GamePath)" Importance="high"/>
+		
+		<PropertyGroup>
+			<EnableModDeployLocal Condition="$(EnableModDeployLocal) == ''">true</EnableModDeployLocal>
+			<EnableGameDebugging Condition="$(EnableGameDebugging) == ''">true</EnableGameDebugging>
+			<EnableAutoGameReferences Condition="$(EnableAutoGameReferences) == ''">true</EnableAutoGameReferences>
+			<EnableAutoWorkshopReferences Condition="$(EnableAutoWorkshopReferences) == ''">true</EnableAutoWorkshopReferences>
+			<EnableAutoLocalModsReferences Condition="$(EnableAutoLocalModsReferences) == ''">true</EnableAutoLocalModsReferences>
+			<EnableDocumentation Condition="$(EnableDocumentation) == ''">false</EnableDocumentation>
+			<EnableAutoPDB Condition="$(EnableAutoPDB) == ''">false</EnableAutoPDB>
+			<AssetBundlePath Condition="$(AssetBundlePath) == ''">$(ProjectDir)\UnityProject - $(ProjectName)\content\mod.assets</AssetBundlePath>
+		</PropertyGroup>
+	</Target>
+
+	<!-- Defining Reference Blacklist  -->
+
+	<Target Name="T_BlacklistReferences" AfterTargets="T_DefinePreferences">
+		<ItemGroup>
+			<Blacklist Include="$(AssemblyReferencePath)\System.Buffers.dll"/>
+			<Blacklist Include="$(AssemblyReferencePath)\Microsoft.Extensions.Logging.Abstractions.dll"/>
+			<Blacklist Include="$(AssemblyReferencePath)\Mono.Posix.dll" />
+			<Blacklist Include="$(AssemblyReferencePath)\Mono.Security.dll" />
+			<Blacklist Include="$(AssemblyReferencePath)\System.Memory.dll" />
+			<Blacklist Include="$(AssemblyReferencePath)\System.Runtime.CompilerServices.Unsafe.dll" />
+		</ItemGroup>
+	</Target>
+
+	<!-- Referencing Libraries / Mods -->
+
+	<Target Name="T_ReferenceLibraries" AfterTargets="T_BlacklistReferences">
+		<ItemGroup>
+			<Reference Include="$(AssemblyReferencePath)\Kitchen.GameData.dll" />
+		</ItemGroup>
+		<ItemGroup Condition="$(AssemblyReferencePath) != '' AND $(EnableAutoGameReferences) == 'true'">
+			<Reference Include="$(AssemblyReferencePath)\*.dll" Exclude="@(Blacklist)" />
+		</ItemGroup>
+
+		<ItemGroup Condition="$(WorkshopPath) != '' AND $(EnableAutoWorkshopReferences) == 'true'">
+			<Reference Include="$(WorkshopPath)\**\*.dll" />
+		</ItemGroup>
+
+		<ItemGroup Condition="$(ModsPath) != '' AND $(EnableAutoLocalModsReferences) == 'true'">
+			<Reference Include="$(ModsPath)\**\content\*.dll" Exclude="$(ModsPath)\$(MSBuildProjectName)\**\content\*.dll" />
+		</ItemGroup>
+	</Target>
+
+	<!-- Enable Debugging -->
+
+	<Target Name="T_EnableDebugging" AfterTargets="T_ReferenceLibraries">
+		<PropertyGroup Condition="'$(OS)' == 'Windows_NT' AND '$(EnableGameDebugging)' == 'true'">
+			<StartAction>Program</StartAction>
+			<StartProgram>$(GamePath)\PlateUp.exe</StartProgram>
+			<StartWorkingDirectory>$(GamePath)</StartWorkingDirectory>
+		</PropertyGroup>
+	</Target>
+
+	<!-- Enable Documentation -->
+
+	<Target Name="T_EnableDocumentation" AfterTargets="T_EnableDebugging">
+		<PropertyGroup>
+			<GenerateDocumentationFile>true</GenerateDocumentationFile>
+			<DocumentationFile>$BuildDir\$(AssemblyName).xml</DocumentationFile>
+		</PropertyGroup>
+	</Target>
+
+	<!-- Post Build Actions -->
+
+	<Target Name="Deploy1" AfterTargets="Build" Condition="$(EnableModDeployLocal) == 'true'">
+		<ItemGroup>
+			<_DLLToCopy Include="$(BuildDir)/$(AssemblyName).dll" />
+			<_XMLToCopy Include="$(BuildDir)/$(AssemblyName).xml" />
+			<_PDBToCopy Include="$(BuildDir)/$(AssemblyName).pdb" />
+		</ItemGroup>
+
+		<Message Text="**********************************************************" Importance="high"/>
+		<Message Text="*             PlateUp! Mod Utilities 1.14.2              *" Importance="high"/>
+		<Message Text="*                                                        *" Importance="high"/>
+		<Message Text="*                      By Yariazen                       *" Importance="high"/>
+		<Message Text="**********************************************************" Importance="high"/>
+		
+		
+		<Message Text="Deploying DLL to $(ModsPath)\$(MSBuildProjectName)\" Importance="high"/>
+		<Copy SourceFiles="@(_DLLToCopy)" DestinationFiles="@(_DLLToCopy->'$(ModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
+		
+		<Message Condition="$(EnableDocumentation) == 'true'" Text="Deploying XML Documentation to $(ModsPath)\$(MSBuildProjectName)\" Importance="high"/>
+		<Copy Condition="$(EnableDocumentation) == 'true'" SourceFiles="@(_XMLToCopy)" DestinationFiles="@(_XMLToCopy->'$(ModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
+		
+		<Message Condition="'$(EnableAutoPDB)'" Text="Deploying PDB to $(ModsPath)\$(MSBuildProjectName)\" Importance="high"/>
+		<Copy Condition="'$(EnableAutoPDB)'" SourceFiles="@(_PDBToCopy)" DestinationFiles="@(_PDBToCopy->'$(ModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
+		
+		<Message Condition="Exists('$(AssetBundlePath)')" Text="Deploying AssetBundle to $(ModsPath)\$(MSBuildProjectName)\content\" Importance="high"/>
+		<Copy Condition="Exists('$(AssetBundlePath)')" SourceFiles="$(AssetBundlePath)" DestinationFiles="$(ModsPath)\$(MSBuildProjectName)\content\$([System.String]::Copy('$(AssemblyName)')).assets" />
+		
+		<Message Condition="Exists('@(AdditionalDLLs)')" Text="Deploying AdditionalDLLs to $(ModsPath)\$(MSBuildProjectName)\content\" Importance="high"/>
+		<Copy SourceFiles="@(AdditionalDLLs)" DestinationFiles="@(AdditionalDLLs->'$(ModsPath)\$(MSBuildProjectName)\content\%(RecursiveDir)%(Filename)%(Extension)')" />
+	</Target>
+</Project>
