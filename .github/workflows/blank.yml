@@ -36,6 +36,7 @@ jobs:
         
         -   name: Build GenerateReferences
             run: |
+                pwd
                 tree .
                 cd GenerateReferences
                 dotnet nuget add source ~/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/bin/Release
