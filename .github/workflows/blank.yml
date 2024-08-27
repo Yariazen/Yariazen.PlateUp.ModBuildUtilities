@@ -14,6 +14,19 @@ jobs:
 
         steps:
         -   uses: actions/checkout@v4
+  
+        -   name: Setup DepotDownloader
+            run: |
+                wget https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_2.5.0/DepotDownloader-linux-x64.zip
+                unzip DepotDownloader-linux-x64.zip
+                chmod +x DepotDownloader
+
+        -   name: Download PlateUp
+            env:
+                USER: ${{ secrets.STEAM_USERNAME }}
+                PASS: ${{ secrets.STEAM_PASSWORD }}
+            run:
+                ./DepotDownloader -app 1599600 -depot 1599601 -username $USER -password $PASS
         
         -   name: Install Debug Tools
             run: |
