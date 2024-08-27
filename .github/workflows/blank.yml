@@ -32,6 +32,9 @@ jobs:
             run: |
                 cd Yariazen.PlateUp.ModBuildUtilities
                 dotnet build -c Release
+                cd ./bin/Release
+                pwd
+                cd ../..
                 cd ..
         
         -   name: Build GenerateReferences
