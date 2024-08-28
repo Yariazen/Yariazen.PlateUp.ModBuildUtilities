@@ -117,6 +117,8 @@ string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
 	<!-- Referencing Libraries / Mods -->
 
 	<Target Name="T_ReferenceLibraries" AfterTargets="T_BlacklistReferences">
+		<Message Text="Adding assembly references at $(AssemblyReferencePath)." Importance="high"/>
+		
 		<ItemGroup>
 			<Reference Include="$(AssemblyReferencePath)\Kitchen.GameData.dll" />
 		</ItemGroup>
