@@ -55,7 +55,7 @@ string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
 
 	<!-- Verify path -->
 	
-	<Target Name="T_VerifyA" AfterTargets="T_FindSteamOnWindows;T_FindSteamOnUnix" Condition="$(SteamInstallDirectory) == ''">
+	<Target Name="T_VerifyA" AfterTargets="T_FindSteamOnWindows;T_FindSteamOnUnix" Condition="$(SteamInstallDirectory) == '' And $(GamePath) == ''">
 		<Message Text="**********************************************************" Importance="high"/>
 		<Message Text="* Failed to find Steam Path. Please specifiy GamePath.   *" Importance="high"/>
 		<Message Text="**********************************************************" Importance="high"/>
