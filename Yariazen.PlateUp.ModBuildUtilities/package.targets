@@ -61,19 +61,12 @@ string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
 		<Message Text="**********************************************************" Importance="high"/>
 	</Target>
 
-	<!-- Checking where PlateUp is installed along with related paths -->
+	<!-- Checking where PlateUp is installed-->
 
 	<Target Name="T_FindPlateUp" AfterTargets="T_FindSteamOnWindows;T_FindSteamOnUnix" Condition="$(SteamInstallDirectory) != '' And $(GamePath) == ''">
 		<FindPlateUpTask SteamPath="$(SteamInstallDirectory)">
 			<Output PropertyName="_GamePath" TaskParameter="PlateUpPath" />
 		</FindPlateUpTask>
-
-		<PropertyGroup>
-			<GamePath Condition="$(GamePath) == ''">$(_GamePath)</GamePath>
-			<AssemblyReferencePath Condition="$(AssemblyReferencePath) == ''">$(GamePath)\PlateUp_Data\Managed</AssemblyReferencePath>
-			<WorkshopPath Condition="$(WorkshopPath) == ''">$(GamePath)\..\..\..\workshop\content\1599600</WorkshopPath>
-			<ModsPath Condition="$(ModsPath) == ''">$(GamePath)\Mods</ModsPath>
-		</PropertyGroup>
 	</Target>
 
 	<!-- Verify path -->
@@ -82,6 +75,17 @@ string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
 		<Message Text="**********************************************************" Importance="high"/>
 		<Message Text="* Failed to find PlateUp Path. Please specifiy GamePath. *" Importance="high"/>
 		<Message Text="**********************************************************" Importance="high"/>
+	</Target>
+
+	<!-- Find related paths -->
+	
+	<Target Name="T_FindRelatedPaths" AfterTargets="T_FindPlateUp">
+		<PropertyGroup>
+			<GamePath Condition="$(GamePath) == ''">$(_GamePath)</GamePath>
+			<AssemblyReferencePath Condition="$(AssemblyReferencePath) == ''">$(GamePath)\PlateUp_Data\Managed</AssemblyReferencePath>
+			<WorkshopPath Condition="$(WorkshopPath) == ''">$(GamePath)\..\..\..\workshop\content\1599600</WorkshopPath>
+			<ModsPath Condition="$(ModsPath) == ''">$(GamePath)\Mods</ModsPath>
+		</PropertyGroup>
 	</Target>
 
 	<!-- Defining preferences -->
