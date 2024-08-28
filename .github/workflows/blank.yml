@@ -43,7 +43,7 @@ jobs:
                 dotnet-version: 6.x
         
         -   name: View File tree
-            run: tree /
+            run: tree /home
         
         -   name: Build ModBuildUtilities
             run: |
