@@ -20,12 +20,16 @@ jobs:
                 wget https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_2.5.0/DepotDownloader-linux-x64.zip
                 unzip DepotDownloader-linux-x64.zip
                 chmod +x DepotDownloader
-
+        
         -   name: Download PlateUp
+            uses: Wandalen/wretry.action@master
             env:
                 USER: ${{ secrets.STEAM_USERNAME }}
                 PASS: ${{ secrets.STEAM_PASSWORD }}
-            run: ./DepotDownloader -app 1599600 -depot 1599601 -username "$USER" -password "$PASS"
+            with:
+                command: ./DepotDownloader -app 1599600 -depot 1599601 -username "$USER" -password "$PASS"
+                attempt_limit: 3
+                attempt_delay: 2000
         
         -   name: Install Debug Tools
             run: sudo apt install -y tree
