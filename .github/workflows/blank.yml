@@ -25,7 +25,9 @@ jobs:
             env:
                 USER: ${{ secrets.STEAM_USERNAME }}
                 PASS: ${{ secrets.STEAM_PASSWORD }}
-            run: ./DepotDownloader -app 1599600 -depot 1599601 -username "$env:USER" -password "$env:PASS"
+            run: |
+                echo "$env:USER"
+                ./DepotDownloader -app 1599600 -depot 1599601 -username "$env:USER" -password "$env:PASS"
         
         -   name: Install Debug Tools
             run: |
