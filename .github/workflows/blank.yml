@@ -54,7 +54,8 @@ jobs:
                 cd GenerateReferences
                 dotnet nuget add source /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/bin/Release
                 dotnet add package Yariazen.PlateUp.ModBuildUtilities
-                dotnet build -c Release -p:GamePath=`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp -p:EnableGameDebugging='false'
+                echo `ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp
+            #    dotnet build -c Release -p:GamePath=`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp -p:EnableGameDebugging='false'
                 cd ..
                 
         -   name: Verify File tree
