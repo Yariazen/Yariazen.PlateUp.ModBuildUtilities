@@ -53,9 +53,17 @@ string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
 		</PropertyGroup>
 	</Target>
 
+	<!-- Verify path -->
+	
+	<Target Name="T_VerifyA" AfterTargets="T_FindSteamOnWindows;T_FindSteamOnUnix" Condition="$(SteamInstallDirectory) == ''">
+		<Message Text="**********************************************************" Importance="high"/>
+		<Message Text="* Failed to find Steam Path. Please specifiy GamePath.   *" Importance="high"/>
+		<Message Text="**********************************************************" Importance="high"/>
+	</Target>
+
 	<!-- Checking where PlateUp is installed along with related paths -->
 
-	<Target Name="T_FindPlateUp" AfterTargets="T_FindSteamOnWindows;T_FindSteamOnUnix">
+	<Target Name="T_FindPlateUp" AfterTargets="T_FindSteamOnWindows;T_FindSteamOnUnix" Condition="$(SteamInstallDirectory) != ''">
 		<FindPlateUpTask SteamPath="$(SteamInstallDirectory)">
 			<Output PropertyName="_GamePath" TaskParameter="PlateUpPath" />
 		</FindPlateUpTask>
@@ -70,7 +78,7 @@ string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
 
 	<!-- Verify path -->
 
-	<Target Name="T_VerifyPath" AfterTargets="T_FindPlateUp" Condition="$(GamePath) == ''">
+	<Target Name="T_VerifyB" AfterTargets="T_FindPlateUp" Condition="$(GamePath) == ''">
 		<Message Text="**********************************************************" Importance="high"/>
 		<Message Text="* Failed to find PlateUp Path. Please specifiy GamePath. *" Importance="high"/>
 		<Message Text="**********************************************************" Importance="high"/>

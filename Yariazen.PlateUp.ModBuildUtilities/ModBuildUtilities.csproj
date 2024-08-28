@@ -13,7 +13,7 @@
 		<!--NuGet Package-->
 		<PackageId>Yariazen.PlateUp.ModBuildUtilities</PackageId>
 		<Title>Build package for PlateUp mods</Title>
-		<Version>1.14.2</Version>
+		<Version>1.14.3</Version>
 		<Authors>Yariazen</Authors>
 		<Description>Automates the build configuration for PlateUp mods as well as some utilities.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>

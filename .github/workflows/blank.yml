@@ -25,13 +25,10 @@ jobs:
             env:
                 USER: ${{ secrets.STEAM_USERNAME }}
                 PASS: ${{ secrets.STEAM_PASSWORD }}
-            run: |
-                echo "$USER"
-                ./DepotDownloader -app 1599600 -depot 1599601 -username "$USER" -password "$PASS"
+            run: ./DepotDownloader -app 1599600 -depot 1599601 -username "$USER" -password "$PASS"
         
         -   name: Install Debug Tools
-            run: |
-                sudo apt install -y tree
+            run: sudo apt install -y tree
 
         -   name: Install X
             run: sudo apt install -y xvfb xdotool
@@ -43,7 +40,6 @@ jobs:
 
         -   name: Build ModBuildUtilities
             run: |
-                tree .
                 cd Yariazen.PlateUp.ModBuildUtilities
                 dotnet build -c Release
                 cd ..
