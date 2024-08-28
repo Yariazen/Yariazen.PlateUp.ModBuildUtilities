@@ -61,7 +61,7 @@ jobs:
             timeout-minutes: 1
             run: |
                 xvfb-run -h
-                xvfb-run -e xvfb.log ./`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp/PlateUp.exe
+                xvfb-run -e xvfb.log .`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp/PlateUp.exe
                 cat xvfb.log
   
             
