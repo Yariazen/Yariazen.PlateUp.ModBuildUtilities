@@ -29,6 +29,10 @@ jobs:
                 command: ./DepotDownloader -app 1599600 -depot 1599601 -username "$USER" -password "$PASS"
                 attempt_limit: 3
                 attempt_delay: 2000
+                
+        -   name: Export PlateUp path
+            run:
+                export GAMEPATH=`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp
         
         -   name: Install Debug Tools
             run: sudo apt install -y tree
@@ -51,16 +55,16 @@ jobs:
                 dotnet add package Yariazen.PlateUp.ModBuildUtilities
                 dotnet build -c Release -p:GamePath=`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp -p:EnableGameDebugging='false'
                 cd ..
-
-    generate:
-        runs-on: ubuntu-latest
-        needs: build
-        container: scottyhardy/docker-wine
-        steps:
-        -   name: View Tree
+                
+        -   name: Docker Wine
             run: |
-                sudo apt install -y tree
-                tree .
+                wget https://raw.githubusercontent.com/scottyhardy/docker-wine/master/docker-wine
+                chmod +x docker-wine
+                
+        -   name: Run PlateUp
+            timeout-minutes: 1
+            run: |
+                echo $GAMEPATH
   
             
     #  - name: Install Refasmer
