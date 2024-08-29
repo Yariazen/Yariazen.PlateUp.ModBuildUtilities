@@ -33,16 +33,13 @@ jobs:
 #                attempt_limit: 3
 #                attempt_delay: 2000
 #        
-        -   name: Install Debug Tools
-            run: sudo apt install -y tree
-            
-        -   name: View file tree
-            run: tree .
-#    
-#        -   name: Install .NET Core
-#            uses: actions/setup-dotnet@v3
-#            with:
-#                dotnet-version: 6.x
+#        -   name: Install Debug Tools
+#            run: sudo apt install -y tree
+    
+        -   name: Install .NET Core
+            uses: actions/setup-dotnet@v3
+            with:
+                dotnet-version: 6.x
 #        
 #        -   name: Build ModBuildUtilities
 #            run: |
