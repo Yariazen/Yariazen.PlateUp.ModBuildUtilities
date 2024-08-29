@@ -53,15 +53,15 @@ jobs:
                 dotnet build -c Release -p:GamePath=`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp -p:EnableGameDebugging='false'
                 cd ..
 
-#    generate:
-#        runs-on: ubuntu-latest
-#        needs: build
-#        container: scottyhardy/docker-wine
+    generate:
+        runs-on: ubuntu-latest
+        needs: build
+        container: scottyhardy/docker-wine
         
-#        -   name: View Tree
-#            run: |
-#                docker exec sudo apt install -y tree
-#                docker exec tree .
+        -   name: View Tree
+            run: |
+                sudo apt install -y tree
+                tree .
   
             
     #  - name: Install Refasmer
