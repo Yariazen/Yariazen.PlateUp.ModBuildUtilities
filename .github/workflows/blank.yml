@@ -26,7 +26,7 @@ jobs:
             env:
                 USER: ${{ secrets.STEAM_USERNAME }}
                 PASS: ${{ secrets.STEAM_PASSWORD }}
-           with:
+            with:
                 command: ./DepotDownloader -app 1599600 -depot 1599601 -username "$USER" -password "$PASS"
                 attempt_limit: 3
                 attempt_delay: 2000
