@@ -31,8 +31,10 @@ jobs:
                 attempt_delay: 2000
                 
         -   name: Export PlateUp path
-            run:
-                export GAMEPATH=`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp
+            id: gamepath
+            run: |
+                gamepath=`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp
+                echo "gamepath=$gamepath" >> $GITHUB_OUTPUT
         
         -   name: Install Debug Tools
             run: sudo apt install -y tree
@@ -63,8 +65,10 @@ jobs:
                 
         -   name: Run PlateUp
             timeout-minutes: 1
+            env:
+                GAMEPATH: ${{ steps.gamepath.outputs.gamepath }}
             run: |
-                echo $GAMEPATH
+                echo "$GAMEPATH"
   
             
     #  - name: Install Refasmer
