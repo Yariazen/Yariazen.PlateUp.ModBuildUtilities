@@ -11,58 +11,57 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-        container: scottyhardy/docker-wine
 
         steps:
         -   uses: actions/checkout@v4
   
-#        -   name: Setup DepotDownloader
-#            run: |
-#                wget https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_2.5.0/DepotDownloader-linux-x64.zip
-#                unzip DepotDownloader-linux-x64.zip
-#                chmod +x DepotDownloader
+        -   name: Setup DepotDownloader
+            run: |
+                wget https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_2.5.0/DepotDownloader-linux-x64.zip
+                unzip DepotDownloader-linux-x64.zip
+                chmod +x DepotDownloader
         
-        # /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/15299039/PlateUp
-#        -   name: Download PlateUp
-#            uses: Wandalen/wretry.action@master
-#            env:
-#                USER: ${{ secrets.STEAM_USERNAME }}
-#                PASS: ${{ secrets.STEAM_PASSWORD }}
-#           with:
-#                command: ./DepotDownloader -app 1599600 -depot 1599601 -username "$USER" -password "$PASS"
-#                attempt_limit: 3
-#                attempt_delay: 2000
-#        
-#        -   name: Install Debug Tools
-#            run: sudo apt install -y tree
+        -   name: Download PlateUp
+            uses: Wandalen/wretry.action@master
+            env:
+                USER: ${{ secrets.STEAM_USERNAME }}
+                PASS: ${{ secrets.STEAM_PASSWORD }}
+           with:
+                command: ./DepotDownloader -app 1599600 -depot 1599601 -username "$USER" -password "$PASS"
+                attempt_limit: 3
+                attempt_delay: 2000
+        
+        -   name: Install Debug Tools
+            run: sudo apt install -y tree
     
         -   name: Install .NET Core
             uses: actions/setup-dotnet@v3
             with:
                 dotnet-version: 6.x
-#        
-#        -   name: Build ModBuildUtilities
-#            run: |
-#                cd Yariazen.PlateUp.ModBuildUtilities
-#                dotnet build -c Release
-#                cd ..
-#        
-#        -   name: Build GenerateReferences
-#            run: |
-#                cd GenerateReferences
-#                dotnet nuget add source /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/bin/Release
-#                dotnet add package Yariazen.PlateUp.ModBuildUtilities
-#                dotnet build -c Release -p:GamePath=`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp -p:EnableGameDebugging='false'
-#                cd ..
-#                
-#        -   name: Install X
-#            run: sudo apt install -y xvfb xdotool        
-#        
-#        -   name: Setup xvfb for screen 0
-#            timeout-minutes: 1
-#            run: |
-#                xvfb-run -e xvfb.log .`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp/PlateUp.exe
-#                cat xvfb.log
+        
+        -   name: Build ModBuildUtilities
+            run: |
+                cd Yariazen.PlateUp.ModBuildUtilities
+                dotnet build -c Release
+                cd ..
+        
+        -   name: Build GenerateReferences
+            run: |
+                cd GenerateReferences
+                dotnet nuget add source /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/bin/Release
+                dotnet add package Yariazen.PlateUp.ModBuildUtilities
+                dotnet build -c Release -p:GamePath=`ls -d /home/runner/work/Yariazen.PlateUp.ModBuildUtilities/Yariazen.PlateUp.ModBuildUtilities/depots/1599601/**`/PlateUp -p:EnableGameDebugging='false'
+                cd ..
+
+    generate:
+        runs-on: ubuntu-latest
+        needs: build
+        container: scottyhardy/docker-wine
+        
+        -   name: View Tree
+            run: |
+                docker exec sudo apt install -y tree
+                docker exec tree .
   
             
     #  - name: Install Refasmer
