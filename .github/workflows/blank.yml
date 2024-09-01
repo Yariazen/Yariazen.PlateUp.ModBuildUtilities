@@ -67,7 +67,7 @@ jobs:
             timeout-minutes: 1
             env:
                 GAMEPATH: ${{ steps.gamepath.outputs.gamepath }}
-            run: ./docker-wine --xvfb=:95,0,720x480x8
+            run: ./docker-wine --detach --xvfb=:95,0,720x480x8
   
             
     #  - name: Install Refasmer
