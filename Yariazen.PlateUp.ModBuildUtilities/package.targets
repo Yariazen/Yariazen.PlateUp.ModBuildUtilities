@@ -56,7 +56,7 @@ string libraryfolders = Path.Combine(SteamPath, "config", "libraryfolders.vdf");
 	<!-- Checking where PlateUp is installed along with related paths -->
 
 	<Target Name="T_FindPlateUp" AfterTargets="T_FindSteamOnWindows;T_FindSteamOnUnix">
-		<FindPlateUpTask SteamPath="$(SteamInstallDirectory)">
+		<FindPlateUpTask SteamPath="$(SteamInstallDirectory)" Condition="$(GamePath) == ''">
 			<Output PropertyName="_GamePath" TaskParameter="PlateUpPath" />
 		</FindPlateUpTask>
 
